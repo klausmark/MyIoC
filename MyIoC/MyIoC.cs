@@ -5,28 +5,29 @@ using System.Reflection;
 
 namespace MyIoC
 {
-    internal class RegisteredImplementation
+    internal class Implementation
     {
-        public Type ImplementationType { get; set; }
-        public bool ShouldBeSingleInstance { get; set; }
-        public object Instance { get; set; }
+        public Type TypeOfImplementation { get; set; }
+        public object InstanceOfImplementation { get; set; }
+        public bool UseSingleInstance { get; set; }
     }
-
     public class MyIoC
     {
-        private readonly Dictionary<Type, RegisteredImplementation> _registrations = new Dictionary<Type, RegisteredImplementation>();
+        private readonly Dictionary<Type, Implementation> _registrations = new Dictionary<Type, Implementation>();
 
-        public void Register<TInterface, TImplementation>(bool shouldThereOnlyBeOneInstanceOfImplementation = true)
+        public void Register<TInterface, TImplementation>(bool useSingleInstance = true)
         {
-            var interfaceType = typeof (TInterface);
-            var implementationType = typeof (TImplementation);
-            if (ImplementationDoesNotImplementInterface(interfaceType, implementationType)) throw new Exception("Implementation does not implement abstraction");
-            var implementation = new RegisteredImplementation
+            var typeOfInterface = typeof (TInterface);
+            var typeOfImplementation = typeof (TImplementation);
+
+            if (ImplementationDoesNotImplementInterface(typeOfInterface, typeOfImplementation)) throw new Exception("Implementation does not implement abstraction");
+
+            var implementation = new Implementation
             {
-                ImplementationType = implementationType,
-                ShouldBeSingleInstance = shouldThereOnlyBeOneInstanceOfImplementation
+                UseSingleInstance = useSingleInstance,
+                TypeOfImplementation = typeOfImplementation
             };
-            _registrations.Add(interfaceType, implementation);
+            _registrations.Add(typeOfInterface, implementation);
         }
 
         private static bool ImplementationDoesNotImplementInterface(Type interfaceType, Type implementationType)
@@ -47,20 +48,22 @@ namespace MyIoC
 
         private object Resolv(Type type)
         {
-            var constructor = GetConstructorICanConstruct(type);
-            var parameters = ConstructParametersForConstructor(constructor).ToArray();
-            return constructor.Invoke(parameters);
+            var implementation = _registrations[type];
+            if (implementation.UseSingleInstance && implementation.InstanceOfImplementation != null)
+                return implementation.InstanceOfImplementation;
+
+            var constructor = GetConstructorICanConstruct(implementation.TypeOfImplementation);
+            var parameters = ConstructParametersForConstructor(constructor);
+            var instanceOfType = constructor.Invoke(parameters);
+
+            if (implementation.UseSingleInstance) implementation.InstanceOfImplementation = instanceOfType;
+            return instanceOfType;
         }
 
-        private IEnumerable<object> ConstructParametersForConstructor(ConstructorInfo constructor)
+        private object[] ConstructParametersForConstructor(ConstructorInfo constructor)
         {
             var parameters = constructor.GetParameters();
-            foreach (var parameter in parameters)
-            {
-                if (_registrations[parameter.ParameterType].ShouldBeSingleInstance && _registrations[parameter.ParameterType].Instance != null)
-                    yield return _registrations[parameter.ParameterType].Instance;
-                yield return Resolv(_registrations[parameter.ParameterType].ImplementationType);
-            }
+            return parameters.Select(parameter => Resolv(parameter.ParameterType)).ToArray();
         }
 
         private ConstructorInfo GetConstructorICanConstruct(Type type)
