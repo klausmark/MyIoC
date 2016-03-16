@@ -5,16 +5,28 @@ using System.Reflection;
 
 namespace MyIoC
 {
+    internal class RegisteredImplementation
+    {
+        public Type ImplementationType { get; set; }
+        public bool ShouldBeSingleInstance { get; set; }
+        public object Instance { get; set; }
+    }
+
     public class MyIoC
     {
-        private readonly Dictionary<Type, Type> _registrations = new Dictionary<Type, Type>();
+        private readonly Dictionary<Type, RegisteredImplementation> _registrations = new Dictionary<Type, RegisteredImplementation>();
 
-        public void Register<TInterface, TImplementation>()
+        public void Register<TInterface, TImplementation>(bool shouldThereOnlyBeOneInstanceOfImplementation = true)
         {
             var interfaceType = typeof (TInterface);
             var implementationType = typeof (TImplementation);
             if (ImplementationDoesNotImplementInterface(interfaceType, implementationType)) throw new Exception("Implementation does not implement abstraction");
-            _registrations.Add(typeof(TInterface), typeof(TImplementation));
+            var implementation = new RegisteredImplementation
+            {
+                ImplementationType = implementationType,
+                ShouldBeSingleInstance = shouldThereOnlyBeOneInstanceOfImplementation
+            };
+            _registrations.Add(interfaceType, implementation);
         }
 
         private static bool ImplementationDoesNotImplementInterface(Type interfaceType, Type implementationType)
@@ -36,14 +48,19 @@ namespace MyIoC
         private object Resolv(Type type)
         {
             var constructor = GetConstructorICanConstruct(type);
-            var parameters = ConstructParametersForConstructor(constructor);
+            var parameters = ConstructParametersForConstructor(constructor).ToArray();
             return constructor.Invoke(parameters);
         }
 
-        private object[] ConstructParametersForConstructor(ConstructorInfo constructor)
+        private IEnumerable<object> ConstructParametersForConstructor(ConstructorInfo constructor)
         {
             var parameters = constructor.GetParameters();
-            return parameters.Select(parameter => Resolv(_registrations[parameter.ParameterType])).ToArray();
+            foreach (var parameter in parameters)
+            {
+                if (_registrations[parameter.ParameterType].ShouldBeSingleInstance && _registrations[parameter.ParameterType].Instance != null)
+                    yield return _registrations[parameter.ParameterType].Instance;
+                yield return Resolv(_registrations[parameter.ParameterType].ImplementationType);
+            }
         }
 
         private ConstructorInfo GetConstructorICanConstruct(Type type)
