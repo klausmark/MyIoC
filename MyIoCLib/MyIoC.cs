@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MyIoCLib.Exceptions;
 
-namespace MyIoC
+namespace MyIoCLib
 {
     internal class Implementation
     {
@@ -20,7 +21,8 @@ namespace MyIoC
             var typeOfInterface = typeof (TInterface);
             var typeOfImplementation = typeof (TImplementation);
 
-            if (ImplementationDoesNotImplementInterface(typeOfInterface, typeOfImplementation)) throw new Exception("Implementation does not implement abstraction");
+            if (ImplementationDoesNotImplementInterface(typeOfInterface, typeOfImplementation))
+                throw new ImplementationDoesNotImplementInterfaceException("Implementation does not implement abstraction");
 
             var implementation = new Implementation
             {
@@ -77,7 +79,7 @@ namespace MyIoC
                         doIHaveAllParamaters = false;
                 if (doIHaveAllParamaters) return constructor;
             }
-            throw new Exception("There is no constructor that i know types of all parameters for");
+            throw new NoValidConstructor("There is no constructor that i know types of all parameters for");
         }
 
         public static MyIoC Default { get; } = new MyIoC();

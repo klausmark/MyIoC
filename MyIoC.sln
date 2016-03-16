@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIoC", "MyIoC\MyIoC.csproj", "{FAF67DA3-F182-49DB-8D08-1737DA61D48C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIoCLib", "MyIoCLib\MyIoCLib.csproj", "{FAF67DA3-F182-49DB-8D08-1737DA61D48C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIoCTests", "MyIoCTests\MyIoCTests.csproj", "{65D5CF21-9B66-4814-B419-2346AC7E537E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIoCTests", "MyIoCLibTests\MyIoCTests.csproj", "{65D5CF21-9B66-4814-B419-2346AC7E537E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
