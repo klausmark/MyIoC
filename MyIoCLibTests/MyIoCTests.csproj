@@ -52,6 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DependsOnITest.cs" />
+    <Compile Include="DoesNotImplementITest.cs" />
+    <Compile Include="ImplementsITest.cs" />
+    <Compile Include="ITest.cs" />
+    <Compile Include="MyIoCBuilder.cs" />
     <Compile Include="MyIoCTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

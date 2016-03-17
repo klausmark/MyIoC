@@ -21,8 +21,7 @@ namespace MyIoCLib
             var typeOfInterface = typeof (TInterface);
             var typeOfImplementation = typeof (TImplementation);
 
-            if (ImplementationDoesNotImplementInterface(typeOfInterface, typeOfImplementation))
-                throw new ImplementationDoesNotImplementInterfaceException("Implementation does not implement abstraction");
+            CheckIfImplementationImplementsInterface(typeOfInterface, typeOfImplementation);
 
             var implementation = new Implementation
             {
@@ -32,14 +31,15 @@ namespace MyIoCLib
             _registrations.Add(typeOfInterface, implementation);
         }
 
-        private static bool ImplementationDoesNotImplementInterface(Type interfaceType, Type implementationType)
+        private static void CheckIfImplementationImplementsInterface(Type typeOfInterface,Type typeOfImplementation)
         {
-            return !interfaceType.IsAssignableFrom(implementationType);
+            if (!typeOfInterface.IsAssignableFrom(typeOfImplementation))
+                throw new ImplementationDoesNotImplementInterfaceException("Implementation does not implement abstraction");
         }
 
-        public void Register<TImplementation>()
+        public void Register<TImplementation>(bool useSingleInstance = true)
         {
-            Register<TImplementation, TImplementation>();
+            Register<TImplementation, TImplementation>(useSingleInstance);
         }
 
         public T Resolv<T>()
