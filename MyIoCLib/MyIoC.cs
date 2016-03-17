@@ -79,7 +79,7 @@ namespace MyIoCLib
                         doIHaveAllParamaters = false;
                 if (doIHaveAllParamaters) return constructor;
             }
-            throw new NoValidConstructor("There is no constructor that i know types of all parameters for");
+            throw new NoValidConstructor($"{type.Name} has no constructor that i know types of all parameters for");
         }
 
         public static MyIoC Default { get; } = new MyIoC();

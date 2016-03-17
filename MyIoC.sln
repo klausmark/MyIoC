@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIoCLib", "MyIoCLib\MyIoCL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIoCTests", "MyIoCLibTests\MyIoCTests.csproj", "{65D5CF21-9B66-4814-B419-2346AC7E537E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsageExample", "UsageExample\UsageExample.csproj", "{4A7620D2-91C8-4A2F-93CF-7D0E3A660EDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{65D5CF21-9B66-4814-B419-2346AC7E537E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65D5CF21-9B66-4814-B419-2346AC7E537E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65D5CF21-9B66-4814-B419-2346AC7E537E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A7620D2-91C8-4A2F-93CF-7D0E3A660EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A7620D2-91C8-4A2F-93CF-7D0E3A660EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A7620D2-91C8-4A2F-93CF-7D0E3A660EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A7620D2-91C8-4A2F-93CF-7D0E3A660EDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
