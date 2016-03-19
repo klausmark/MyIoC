@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using MyIoCLib;
 using MyIoCLib.Exceptions;
 using NUnit.Framework;
 
@@ -75,6 +76,29 @@ namespace MyIoCTests
             resolvedInstance.GetType()
                 .Should()
                 .Be<DependsOnITest>();
+        }
+
+        [Test]
+        public void Can_Resolv_Implementation_With_Parameter()
+        {
+            var myIoC = new MyIoCBuilder().Build();
+            myIoC.Register<ITest2, RequiresParameter>(true, new ImplementationParameter { Parameter = 42, ParameterName = "parameter" });
+
+            var instance = myIoC.Resolv<ITest2>();
+
+            instance.GetType().Should().Be<RequiresParameter>();
+        }
+
+        [Test]
+        public void Can_Resolv_Implementation_With_Parameter_And_Other_Dependency()
+        {
+            var myIoC = new MyIoCBuilder().Build();
+            myIoC.Register<ITest, ImplementsITest>(true);
+            myIoC.Register<RequiresParameterAndDependsOnITest, RequiresParameterAndDependsOnITest>(true, new ImplementationParameter { Parameter = 42, ParameterName = "parameter" });
+
+            var instance = myIoC.Resolv<RequiresParameterAndDependsOnITest>();
+
+            instance.GetType().Should().Be<RequiresParameterAndDependsOnITest>();
         }
     }
 }

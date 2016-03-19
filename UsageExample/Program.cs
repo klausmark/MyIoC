@@ -15,12 +15,13 @@ namespace UsageExample
             øvelse2.GoAhead();
 
             //Uden MyIoC
+            SleepALittleBecauseDefaultRandomSeedIsTimeBased();
             IRandom random = new RandomWrapper();
             var øvelseUdenIoc = new Øvelse2(
                 new ØvelsesConsoleLogger(), 
                 new DieCup(
-                    new Die(random), 
-                    new Die(random)));
+                    new Die(6, random), 
+                    new Die(6, random)));
             øvelseUdenIoc.GoAhead();
         }
 
@@ -38,7 +39,7 @@ namespace UsageExample
 
         private static void RegisterDependencies()
         {
-            MyIoC.Default.Register<IDie, Die>(false);
+            MyIoC.Default.Register<IDie, Die>(false, new ImplementationParameter { ParameterName = "numberOfSides", Parameter = 10 });
             MyIoC.Default.Register<IDieRoller, DieCup>();
             MyIoC.Default.Register<IRandom, RandomWrapper>();
             MyIoC.Default.Register<IØvelsesLogger, ØvelsesConsoleLogger>();

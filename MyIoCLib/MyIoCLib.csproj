@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ImplementationDoesNotImplementInterfaceException.cs" />
     <Compile Include="Exceptions\NoValidConstructor.cs" />
+    <Compile Include="ImplementationParameter.cs" />
     <Compile Include="MyIoC.cs" />
     <Compile Include="Exceptions\MyIoCException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
